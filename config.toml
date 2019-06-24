@@ -1,4 +1,4 @@
-baseURL = "http://blog.jansonlv.top/"
+baseURL = "https://blog.jansonlv.top/"
 title = "Docs Demo"
 theme = "hugo-material-docs"
 metadataformat = "yaml"
