@@ -149,11 +149,11 @@ PS C:\Users\Administrator> docker run -p 4000:80 friendlyhello python web.py
  * Debug mode: off
  * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
  ```
- 您应该看到Python正在为您的应用提供服务的消息http://0.0.0.0:80。但是该消息来自容器内部，它不知道您将该容器的端口80映射到4000，从而生成正确的URL http://localhost:4000。
+ 应该看到Python正在为应用提供服务的消息http://0.0.0.0:80。但是该消息来自容器内部，它不知道将该容器的端口80映射到4000，从而生成正确的URL http://localhost:4000。
 
 点击CTRL+C你的终端退出。
 
-注意：在Windows系统上，CTRL+C不会停止容器。因此，首先键入CTRL+C以获取提示（或打开另一个shell），然后键入 docker container ls以列出正在运行的容器，然后 docker container stop <Container NAME or ID>停止容器。否则，当您尝试在下一步中重新运行容器时，会从守护程序收到错误响应。
+注意：在Windows系统上，CTRL+C不会停止容器。因此，首先键入CTRL+C以获取提示（或打开另一个shell），然后键入 docker container ls以列出正在运行的容器，然后 docker container stop <Container NAME or ID>停止容器。否则，当尝试在下一步中重新运行容器时，会从守护程序收到错误响应。
 ```
 PS C:\Users\Administrator> docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
@@ -175,7 +175,7 @@ d8ca49999467
 
 将本地映像与注册表上的存储库相关联的表示法是 username/repository:tag。标签是可选的，但建议使用，因为它是注册管理机构用来为Docker镜像提供版本的机制。为存储库提供存储库和标记有意义的名称，例如 get-started:part2。这会将图像放入get-started存储库并将其标记为part2。
 
-现在，把它们放在一起来标记图像。docker tag image使用您的用户名，存储库和标记名称运行，以便将图像上载到所需的目标位置。该命令的语法是：
+现在，把它们放在一起来标记图像。docker tag image使用用户名，存储库和标记名称运行，以便将图像上载到所需的目标位置。该命令的语法是：
 ```
 docker tag image username/repository:tag
 ```
@@ -200,10 +200,10 @@ hello-world            latest              fce289e99eb9        6 months ago     
 ```
 docker push username/repository:tag
 ```
-完成后，此上传的结果将公开发布。如果您登录到Docker Hub，则会看到其中的新图像及其pull命令。
+完成后，此上传的结果将公开发布。如果登录到Docker Hub，则会看到其中的新图像及其pull命令。
 
 从远程存储库中拉出并运行映像
-从现在开始，您可以使用docker run以下命令在任何计算机上使用和运行您的应用程序：
+从现在开始，可以使用docker run以下命令在任何计算机上使用和运行应用程序：
 ```
 docker run -p 4000:80 username/repository:tag
 ```

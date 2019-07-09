@@ -1,7 +1,7 @@
 # services
 
 ## 介绍
-在分布式应用程序中，应用程序的不同部分称为“服务”。例如，如果您想做一个视频共享站点，它可能包括一个用于在数据库中存储应用程序数据的服务，一个用于在后台进行视频转码的服务，还有用户上传内容，前端服务等。
+在分布式应用程序中，应用程序的不同部分称为“服务”。例如，如果想做一个视频共享站点，它可能包括一个用于在数据库中存储应用程序数据的服务，一个用于在后台进行视频转码的服务，还有用户上传内容，前端服务等。
 
 服务实际上只是“containers in production.”。一个服务只运行一个镜像，但它规定image运行的规则 - 它应该使用哪些端口，应该运行多少个容器副本，以便服务具有所需的容量等等。扩展服务会更改运行该软件的容器实例的数量，从而为流程中的服务分配更多计算资源。
 
@@ -52,7 +52,7 @@ To add a worker to this swarm, run the following command:
 
 To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
 ```
-现在让我们来运行吧。您需要为您的应用程序命名。在这里，它被设置为 getstartedlab：
+现在让我们来运行吧。需要为应用程序命名。在这里，它被设置为 getstartedlab：
 ```
 docker stack deploy -c docker-compose.yml getstartedlab
 ```
@@ -82,18 +82,18 @@ ID                  NAME                MODE                REPLICAS            
 135w4h9xn91t        getstartedlab_web   replicated          5/5                 jansonlv/get-started:v0.2   *:80->80/tcp
 ```
 
-查找服务的输出，并web以您的应用名称为前缀。如果您将其命名为与此示例中显示的相同，则名称为 getstartedlab_web。还列出了服务ID，以及副本数，映像名称和公开端口。
+查找服务的输出，并web以应用名称为前缀。如果将其命名为与此示例中显示的相同，则名称为 getstartedlab_web。还列出了服务ID，以及副本数，映像名称和公开端口。
 
-在服务中运行的单个容器称为任务。任务被赋予以数字递增的唯一ID，最多为replicas您定义 的数量docker-compose.yml。列出您的服务任务：
+在服务中运行的单个容器称为任务。任务被赋予以数字递增的唯一ID，最多为replicas定义 的数量docker-compose.yml。列出服务任务：
 ```
 docker service ps getstartedlab_web
 ```
-如果您只列出系统上的所有容器，则任务也会显示，但不会被服务过滤：
+如果只列出系统上的所有容器，则任务也会显示，但不会被服务过滤：
 ```
 docker container ls -q
 ```
 ### 扩展应用程序
-您可以通过更改replicas值docker-compose.yml，保存更改并重新运行docker stack deploy命令来扩展应用程序：
+可以通过更改replicas值docker-compose.yml，保存更改并重新运行docker stack deploy命令来扩展应用程序：
 
     docker stack deploy -c docker-compose.yml getstartedlab
 Docker执行就地更新，无需首先拆除堆栈或杀死任何容器。

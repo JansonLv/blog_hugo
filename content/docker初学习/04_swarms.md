@@ -2,13 +2,13 @@
 说明：由于windows hyper环境问题和个人能力有限，后续无法开展，故切换到mac环境
 
 ## 介绍
-群集是一组运行Docker并加入群集的计算机。在此之后，您继续运行您习惯使用的Docker命令，但现在它们由群集管理器在群集上执行。群中的机器可以是物理的或虚拟的。加入群组后，它们被称为节点。
+群集是一组运行Docker并加入群集的计算机。在此之后，继续运行习惯使用的Docker命令，但现在它们由群集管理器在群集上执行。群中的机器可以是物理的或虚拟的。加入群组后，它们被称为节点。
 
-Swarm管理器可以使用多种策略来运行容器，例如“emptiest node” - 它使用容器填充利用率最低的机器。或“global”，它确保每台机器只获得指定容器的一个实例。您指示swarm管理器在Compose文件中使用这些策略，就像您已经使用的那样。
+Swarm管理器可以使用多种策略来运行容器，例如“emptiest node” - 它使用容器填充利用率最低的机器。或“global”，它确保每台机器只获得指定容器的一个实例。指示swarm管理器在Compose文件中使用这些策略，就像已经使用的那样。
 
 群集管理器是swarm中唯一可以执行命令的机器，或授权其他机器作为工作者加入群集。节点只是在那里提供能力，没有权力告诉任何其他机器它能做什么和不能做什么。
 
-到目前为止，您一直在本地计算机上以单主机模式使用Docker。但Docker也可以切换到swarm模式，这就是使用群集的原因。立即启用群集模式使当前计算机成为群集管理器。从那时起，Docker就会运行您在管理的swarm上执行的命令，而不仅仅是在当前机器上。
+到目前为止，一直在本地计算机上以单主机模式使用Docker。但Docker也可以切换到swarm模式，这就是使用群集的原因。立即启用群集模式使当前计算机成为群集管理器。从那时起，Docker就会运行在管理的swarm上执行的命令，而不仅仅是在当前机器上。
 
 ## 设置你的群
 群由多个节点组成，可以是物理或虚拟机。基本概念很简单：运行docker swarm init以启用swarm模式并使当前计算机成为一个swarm管理器，然后docker swarm join在其他计算机上运行 以使它们作为worker加入swarm。选择下面的标签，了解它在各种情况下的效果。我们使用VM快速创建一个双机群集并将其转换为群集。
@@ -56,7 +56,7 @@ myvm3   -        virtualbox   Running   tcp://192.168.99.107:2376           v18.
 ## 初始化SWARM并添加节点
 第一台机器充当管理器，它执行管理命令并验证工人加入群，第二台是工人。
 
-您可以使用命令向VM发送命令docker-machine ssh。指示myvm1 成为一个swarm管理器docker swarm init并查找如下输出：
+可以使用命令向VM发送命令docker-machine ssh。指示myvm1 成为一个swarm管理器docker swarm init并查找如下输出：
 ```
  jansonlv@lvdongchengdeMacBook-Pro-2  ~  docker-machine ssh myvm1 "docker swarm init --advertise-addr '192.168.99.105'"
 Swarm initialized: current node (i66f3wr3l0cbtpsm6dixodu4c) is now a manager.
@@ -67,7 +67,7 @@ To add a worker to this swarm, run the following command:
 
 To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
 ```
-如您所见，响应docker swarm init包含一个预先配置的 docker swarm join命令，您可以在要添加的任何节点上运行该命令。复制此命令，并将其发送到myvm2via docker-machine ssh以myvm2 将新群组作为工作者加入：
+如所见，响应docker swarm init包含一个预先配置的 docker swarm join命令，可以在要添加的任何节点上运行该命令。复制此命令，并将其发送到myvm2via docker-machine ssh以myvm2 将新群组作为工作者加入：
 ```
 jansonlv@lvdongchengdeMacBook-Pro-2  ~  docker-machine ssh myvm2 "docker swarm join --token SWMTKN-1-0hy32lmxzzvexfrzp7j731eax8p8b5lbuuvtcne8w8xcp6mvt9-d6ouxdg9ilu1rsys7n5ywgqsg 192.168.99.105:2377"
 
@@ -88,10 +88,10 @@ sle7i6budpu9diq5vt0h608fq     myvm3               Ready               Active    
 ```
 如果要重新开始，可以docker swarm leave从每个节点运行。
 
-## 在群集群集上部署您的应用程序
-艰难的部分结束了。现在，您只需重复上一章节03_services中使用的过程即可部署到新的swarm上。请记住，只有群体管理员可以myvm1执行Docker命令; worker只是为了能力。
+## 在群集群集上部署应用程序
+艰难的部分结束了。现在，只需重复上一章节03_services中使用的过程即可部署到新的swarm上。请记住，只有群体管理员可以myvm1执行Docker命令; worker只是为了能力。
 
-到目前为止，您已经将Docker命令包装在docker-machine ssh与VM通信中。另一种选择是运行docker-machine env <machine>以获取并运行一个命令，该命令将当前shell配置为与VM上的Docker守护程序通信。此方法适用于下一步，因为它允许您使用本地docker-compose.yml文件“远程”部署应用程序，而无需将其复制到任何位置。
+到目前为止，已经将Docker命令包装在docker-machine ssh与VM通信中。另一种选择是运行docker-machine env \<machine>以获取并运行一个命令，该命令将当前shell配置为与VM上的Docker守护程序通信。此方法适用于下一步，因为它允许使用本地docker-compose.yml文件“远程”部署应用程序，而无需将其复制到任何位置。
 
 键入docker-machine env myvm1，然后复制粘贴并运行作为输出的最后一行提供的命令，以配置要与之通信的shell（myvm1swarm管理器）。
 ```
@@ -110,16 +110,16 @@ myvm2   -        virtualbox   Running   tcp://192.168.99.106:2376           v18.
 myvm3   -        virtualbox   Running   tcp://192.168.99.107:2376           v18.09.7
 ```
 ## 在swarm管理器上部署应用程序
-现在myvm1，您可以使用其作为群组管理器的功能，通过使用docker stack deploy您在第3部分中使用的相同命令myvm1以及您的本地副本来部署您的应用程序docker-compose.yml.。此命令可能需要几秒钟才能完成，部署需要一些时间才能完成。使用docker service ps <service_name>swarm管理器上的 命令验证是否已重新部署所有服务。
+现在myvm1，可以使用其作为群组管理器的功能，通过使用docker stack deploy在第3部分中使用的相同命令myvm1以及本地副本来部署应用程序docker-compose.yml.。此命令可能需要几秒钟才能完成，部署需要一些时间才能完成。使用docker service ps <service_name>swarm管理器上的 命令验证是否已重新部署所有服务。
 
-您myvm1通过docker-machineshell配置进行连接，您仍然可以访问本地主机上的文件。确保您与以前位于同一目录中，其中包括docker-compose.yml您在第3部分中创建的 文件。
+myvm1通过docker-machineshell配置进行连接，仍然可以访问本地主机上的文件。确保与以前位于同一目录中，其中包括docker-compose.yml在第3部分中创建的 文件。
 
 与以前一样，运行以下命令以部署应用程序myvm1。
 
 docker stack deploy -c docker-compose.yml getstartedlab
 就是这样，应用程序部署在一个群集集群中！
 ```
-注意：如果您的映像存储在私有注册表而不是Docker Hub上，则需要使用登录docker login <your-registry>，然后需要将--with-registry-auth标志添加到上述命令中。例如：
+注意：如果映像存储在私有注册表而不是Docker Hub上，则需要使用登录docker login <your-registry>，然后需要将--with-registry-auth标志添加到上述命令中。例如：
 
 docker login registry.example.com
 
@@ -153,10 +153,10 @@ docker stack ps getstartedlab和docker service ps getstartedlab_web效果一样
 ````
 三个节点部署了四个service，其中myvm2中部署了两个
 
-### 访问您的群集
+### 访问群集
 你可以从IP地址来访问你的应用程序要么 myvm1或myvm2或者myvm3。
 
-您创建的网络在它们之间共享并进行负载平衡。运行 docker-machine ls以获取VM的IP地址，并在浏览器上访问其中任何一个，点击刷新（或只是curl它们）。
+创建的网络在它们之间共享并进行负载平衡。运行 docker-machine ls以获取VM的IP地址，并在浏览器上访问其中任何一个，点击刷新（或只是curl它们）。
 ```
 <h3>Hello World!</h3><b>Hostname:</b> 137293db0f75<br/><b>Visits:</b> <i>cannot connect to Redis, counter disabled</i>%                                                                                                                        jansonlv@lvdongchengdeMacBook-Pro-2  ~/blog/content/docker初学习/demo/01_start   master  curl http://192.168.99.105:8081
 <h3>Hello World!</h3><b>Hostname:</b> 04f49ad8d50b<br/><b>Visits:</b> <i>cannot connect to Redis, counter disabled</i>%                                                                                                                        jansonlv@lvdongchengdeMacBook-Pro-2  ~/blog/content/docker初学习/demo/01_start   master  curl http://192.168.99.105:8081
@@ -171,22 +171,22 @@ docker stack ps getstartedlab和docker service ps getstartedlab_web效果一样
 
 #### 有连接麻烦？
 
-请记住，要在群集中使用入口网络，您需要在启用群集模式之前在群集节点之间打开以下端口：
+请记住，要在群集中使用入口网络，需要在启用群集模式之前在群集节点之间打开以下端口：
 
 端口7946 TCP / UDP用于容器网络发现。
 端口4789 UDP用于容器入口网络。
-仔细检查您的Web服务下端口部分中的内容，并确保您在浏览器中输入的IP地址或卷曲反映了该地址
+仔细检查Web服务下端口部分中的内容，并确保在浏览器中输入的IP地址或卷曲反映了该地址
 
-## 迭代和扩展您的应用程序
-从这里，您可以完成第2部分和第3部分中学到的所有知识。
+## 迭代和扩展应用程序
+从这里，可以完成第2部分和第3部分中学到的所有知识。
 
 通过更改docker-compose.yml文件来扩展应用程序。
 
-通过编辑代码，然后重建并推送新图像来更改应用程序行为。（为此，请按照您之前用于构建应用程序并发布图像的相同步骤）。
+通过编辑代码，然后重建并推送新图像来更改应用程序行为。（为此，请按照之前用于构建应用程序并发布图像的相同步骤）。
 
 在任何一种情况下，只需docker stack deploy再次运行即可部署这些更改。
 
-您可以使用docker swarm join您使用的相同命令将任何计算机（物理或虚拟）加入此群myvm2，并将容量添加到群集中。只需在docker stack deploy之后运行，您的应用就可以利用新资源
+可以使用docker swarm join使用的相同命令将任何计算机（物理或虚拟）加入此群myvm2，并将容量添加到群集中。只需在docker stack deploy之后运行，应用就可以利用新资源
 
 ## 清理并重新启动
 ### 堆栈和群
@@ -199,14 +199,14 @@ docker stack ps getstartedlab和docker service ps getstartedlab_web效果一样
 >在某些时候，你可以删除这个群，如果你想 docker-machine ssh myvm2 "docker swarm leave"在工人和docker-machine ssh myvm1 "docker swarm leave --force"经理上，但你需要下一个部分，所以现在保持它。
 
 ### 取消设置docker-machine shell变量设置
-您可以docker-machine使用给定命令在当前shell中取消设置环境变量。
+可以docker-machine使用给定命令在当前shell中取消设置环境变量。
     
     eval $(docker-machine env -u)
 
-这会使shell与docker-machine创建的虚拟机断开连接，并允许您继续在同一个shell中工作，现在使用本机docker 命令（例如，在Docker Desktop for Mac或Docker Desktop for Windows上）。
+这会使shell与docker-machine创建的虚拟机断开连接，并允许继续在同一个shell中工作，现在使用本机docker 命令（例如，在Docker Desktop for Mac或Docker Desktop for Windows上）。
 
 ### 重启Docker机器
-如果关闭本地主机，Docker计算机将停止运行。您可以通过运行来检查机器的状态docker-machine ls。
+如果关闭本地主机，Docker计算机将停止运行。可以通过运行来检查机器的状态docker-machine ls。
 
 $ docker-machine ls
 NAME    ACTIVE   DRIVER       STATE     URL   SWARM   DOCKER    ERRORS

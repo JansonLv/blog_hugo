@@ -127,7 +127,7 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 66bdfb17f623        redis               "docker-entrypoint.s…"   9 seconds ago       Up 8 seconds        0.0.0.0:6379->6379/tcp   redis_test
 ```
 
-列出hello-world在显示其消息后退出的容器（由图像生成）。如果它仍在运行，您将不需要--all选项(docker ps功能一样，加上--all和docker ps -a一样)：
+列出hello-world在显示其消息后退出的容器（由图像生成）。如果它仍在运行，将不需要--all选项(docker ps功能一样，加上--all和docker ps -a一样)：
 ```
 PS C:\Users\Administrator> docker container ls --all
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                      PORTS                    NAMES

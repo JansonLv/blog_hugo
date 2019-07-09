@@ -3,7 +3,7 @@
 ## 介绍
 在这一部分中，我们到达分布式应用程序层次结构的顶部：stack。stack是一组相互关联的服务，它们共享依赖关系，并且可以协调和缩放在一起。单个堆栈能够定义和协调整个应用程序的功能（尽管非常复杂的应用程序可能希望使用多个堆栈）。
 
-一些好消息是，从第3部分开始，当您创建Compose文件并使用时，您在技术上一直在使用堆栈docker stack deploy。但这是在单个主机上运行的单个服务堆栈，这通常不是生产中发生的。在这里，您可以学习所学内容，使多个服务相互关联，并在多台计算机上运行它们。
+一些好消息是，从第3部分开始，当创建Compose文件并使用时，在技术上一直在使用堆栈docker stack deploy。但这是在单个主机上运行的单个服务堆栈，这通常不是生产中发生的。在这里，可以学习所学内容，使多个服务相互关联，并在多台计算机上运行它们。
 
 ## 添加新服务并重新部署
 将服务添加到我们的docker-compose.yml文件很容易。首先，让我们添加一个免费的可视化服务，让我们看看我们的swarm如何调度容器。
@@ -45,7 +45,7 @@ networks:
 
 我们马上谈论更多关于布局约束和数量的内容。
 
-2. 确保您的shell配置为与之通信myvm1（完整示例在此处）。
+2. 确保shell配置为与之通信myvm1（完整示例在此处）。
 
 运行docker-machine ls以列出计算机并确保已连接到myvm1，如旁边的星号所示。
 
@@ -64,9 +64,9 @@ Creating service getstartedlab_visualizer (id: l9mnwkeq2jiononb5ihz9u7a4)
 
 4. 看看可视化工具。
 
-您在Compose文件中看到在visualizer端口8080上运行docker-machine ls。通过运行获取其中一个节点的IP地址。转到端口8080的IP地址，您可以看到运行的可视化工具.
+在Compose文件中看到在visualizer端口8080上运行docker-machine ls。通过运行获取其中一个节点的IP地址。转到端口8080的IP地址，可以看到运行的可视化工具.
 
-visualizer正如您所期望的那样，单个副本正在管理器上运行，并且5个实例web分布在整个群集中。您可以通过运行docker stack ps <stack>以下来证实此可视化：
+visualizer正如所期望的那样，单个副本正在管理器上运行，并且5个实例web分布在整个群集中。可以通过运行docker stack ps <stack>以下来证实此可视化：
 
     docker stack ps getstartedlab
 可视化工具是一个独立的服务，可以在任何包含它的应用程序中运行。它不依赖于任何其他东西。现在让我们创建一个服务不会有依赖性：Redis的服务，提供访客计数器。
@@ -120,7 +120,7 @@ networks:
   webnet:
 
 ```
-Redis在Docker库中有一个官方图像，并且已被授予imagejust 的简称redis，因此username/repo这里没有注释。Redis端口6379已由Redis预先配置为从容器暴露给主机，在我们的Compose文件中，我们将它从主机暴露给外界，因此您实际上可以输入任何IP的IP如果您愿意，可以将节点导入Redis Desktop Manager并管理此Redis实例。
+Redis在Docker库中有一个官方图像，并且已被授予imagejust 的简称redis，因此username/repo这里没有注释。Redis端口6379已由Redis预先配置为从容器暴露给主机，在我们的Compose文件中，我们将它从主机暴露给外界，因此实际上可以输入任何IP的IP如果愿意，可以将节点导入Redis Desktop Manager并管理此Redis实例。
 
 最重要的是，redis规范中有一些事情会使数据在此堆栈的部署之间保持不变：
 
@@ -130,14 +130,14 @@ redis 总是在管理器上运行，所以它总是使用相同的文件系统�
 
 这个真相来源有两个组成部分：
 
-* 您放置在Redis服务上的放置约束，确保它始终使用相同的主机。
-* 您创建的容器允许容器访问./data（在主机上）/data（在Redis容器内）。当容器来来往往时，存储在./data指定主机上的文件仍然存在，从而实现连续性。
-您已准备好部署新的Redis-using堆栈。
+* 放置在Redis服务上的放置约束，确保它始终使用相同的主机。
+* 创建的容器允许容器访问./data（在主机上）/data（在Redis容器内）。当容器来来往往时，存储在./data指定主机上的文件仍然存在，从而实现连续性。
+已准备好部署新的Redis-using堆栈。
 
 2. ./data在管理器上创建一个目录：
 
     docker-machine ssh myvm1 "mkdir ./data"
-3. 确保您的shell配置为与之通信myvm1（完整示例在此处）。
+3. 确保shell配置为与之通信myvm1（完整示例在此处）。
 
 运行docker-machine ls以列出计算机并确保已连接到myvm1，如旁边的星号所示。
 

@@ -31,17 +31,17 @@ EOF
 要排除与构建无关的文件（不重构源存储库），请使用.dockerignore文件。此文件支持与.gitignore文件类似的排除模式。有关创建一个的信息，请参阅 .dockerignore文件。
 
 ### 使用多阶段构建
-多阶段构建允许您大幅减小最终图像的大小，而无需减少中间层和文件的数量。
+多阶段构建允许大幅减小最终图像的大小，而无需减少中间层和文件的数量。
 
 由于图像是在构建过程的最后阶段构建的，因此可以通过利用构建缓存来最小化图像层。
 
-例如，如果您的构建包含多个图层，则可以从较不频繁更改（以确保构建缓存可重用）到更频繁更改的顺序对它们进行排序：
+例如，如果构建包含多个图层，则可以从较不频繁更改（以确保构建缓存可重用）到更频繁更改的顺序对它们进行排序：
 
 * 安装构建应用程序所需的工具
 
 * 安装或更新库依赖项
 
-* 生成您的应用程序
+* 生成应用程序
 
 Go应用程序的Dockerfile可能如下所示：
 ```
@@ -73,21 +73,21 @@ CMD ["--help"]
 ```
 
 ### 不要安装不必要的包
-为了降低复杂性，依赖性，文件大小和构建时间，请避免安装额外的或不必要的软件包，因为它们可能“很好”。例如，您不需要在数据库映像中包含文本编辑器。
+为了降低复杂性，依赖性，文件大小和构建时间，请避免安装额外的或不必要的软件包，因为它们可能“很好”。例如，不需要在数据库映像中包含文本编辑器。
 
 ### 解耦应用程序
 每个容器应该只有一个问题。将应用程序分离到多个容器中可以更容易地水平扩展和重用容器。例如，Web应用程序堆栈可能包含三个独立的容器，每个容器都有自己独特的映像，以分离的方式管理Web应用程序，数据库和内存缓存。
 
 将每个容器限制为一个进程是一个很好的经验法则，但它不是一个硬性规则。例如，不仅可以使用init进程生成容器 ，而且某些程序可能会自行生成其他进程。例如，Celery可以生成多个工作进程，Apache可以为每个请求创建一个进程。
 
-使用您的最佳判断，尽可能保持容器清洁和模块化。如果容器彼此依赖，则可以使用Docker容器网络 来确保这些容器可以进行通信。 
+使用最佳判断，尽可能保持容器清洁和模块化。如果容器彼此依赖，则可以使用Docker容器网络 来确保这些容器可以进行通信。 
 
 ### 最小化层数
 在旧版本的Docker中，最大限度地减少图像中的图层数量以确保它们具有高性能非常重要。添加了以下功能以减少此限制：
 
 只有RUN，COPY，ADD创建图层。其他指令创建临时中间图像，并不增加构建的大小。
 
-在可能的情况下，使用多阶段构建，并仅将所需的工件复制到最终图像中。这允许您在中间构建阶段中包含工具和调试信息，而不会增加最终图像的大小。
+在可能的情况下，使用多阶段构建，并仅将所需的工件复制到最终图像中。这允许在中间构建阶段中包含工具和调试信息，而不会增加最终图像的大小。
 
 ### 对多行参数进行排序
 只要有可能，通过按字母顺序排序多行参数来缓解以后的更改。这有助于避免重复包并使列表更容易更新。这也使PR更容易阅​​读和审查。在反斜杠（\）之前添加空格也有帮助。
@@ -102,9 +102,9 @@ RUN apt-get update && apt-get install -y \
   subversion
 ```
 ### 利用构建缓存
-构建映像时，Docker会逐步Dockerfile执行您的指令， 按指定的顺序执行每个指令。在检查每条指令时，Docker会在其缓存中查找可以重用的现有映像，而不是创建新的（重复）映像。
+构建映像时，Docker会逐步Dockerfile执行指令， 按指定的顺序执行每个指令。在检查每条指令时，Docker会在其缓存中查找可以重用的现有映像，而不是创建新的（重复）映像。
 
-如果您根本不想使用缓存，则可以使用命令中的--no-cache=true 选项docker build。但是，如果您确实让Docker使用其缓存，那么了解它何时可以找到匹配的图像非常重要。Docker遵循的基本规则概述如下：
+如果根本不想使用缓存，则可以使用命令中的--no-cache=true 选项docker build。但是，如果确实让Docker使用其缓存，那么了解它何时可以找到匹配的图像非常重要。Docker遵循的基本规则概述如下：
 
 从已经在高速缓存中的父图像开始，将下一条指令与从该基本图像导出的所有子图像进行比较，以查看它们中的一个是否使用完全相同的指令构建。如果不是，则缓存无效。
 
@@ -129,7 +129,7 @@ FROM <image>[@<digest>] [AS <name>]
 [了解ARG 第一个之前发生的任何指令声明的变量FROM](https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact)
 
 ### LABEL
-您可以为图像添加标签，以帮助按项目组织图像，记录许可信息，辅助自动化或其他原因。对于每个标签，添加LABEL以一个或多个键值对开头的行。以下示例显示了不同的可接受格式。内容包括解释性意见。(带空格的必须""或者转义)
+可以为图像添加标签，以帮助按项目组织图像，记录许可信息，辅助自动化或其他原因。对于每个标签，添加LABEL以一个或多个键值对开头的行。以下示例显示了不同的可接受格式。内容包括解释性意见。(带空格的必须""或者转义)
 ```
 # Set one or more individual labels
 LABEL com.example.version="0.0.1-beta"
@@ -162,7 +162,7 @@ RUN有两种形式：
 
 可以使用该 命令更改shell表单的默认shell SHELL。
 
-在shell形式中，您可以使用\（反斜杠）将单个RUN指令继续到下一行。例如，请考虑以下两行：
+在shell形式中，可以使用\（反斜杠）将单个RUN指令继续到下一行。例如，请考虑以下两行：
 ```
 RUN /bin/bash -c 'source $HOME/.bashrc; \
 echo $HOME'
@@ -173,7 +173,7 @@ echo $HOME'
 
 > 注意：要使用不同于“/bin/sh” 的shell，请使用传入所需shell的命令行。例如， RUN ["/bin/bash", "-c", "echo hello"]
 
-> 注意：exec表单被解析为JSON数组，这意味着您必须使用双引号（“）来围绕单词而不是单引号（'）。
+> 注意：exec表单被解析为JSON数组，这意味着必须使用双引号（“）来围绕单词而不是单引号（'）。
 
 > **注意：** ***与shell表单不同，exec表单不会调用命令shell。这意味着不会发生正常的shell处理。例如， RUN [ "echo", "$HOME" ]不会对变量进行替换$HOME。如果你想要shell处理，那么要么使用shell表单，要么直接执行shell，例如：RUN [ "sh", "-c", "echo $HOME" ]。当使用exec表单并直接执行shell时（如shell表单的情况），它是执行环境变量扩展的shell，而不是docker。***
 
@@ -193,7 +193,7 @@ RUN在下一次构建期间，指令的缓存不会自动失效。类似指令�
     RUN wget -O - https://some.site | wc -l > /number
 Docker使用/bin/sh -c解释器执行这些命令，解释器仅评估管道中最后一个操作的退出代码以确定成功。在上面的示例中，只要wc -l命令成功，即使wget命令失败，此构建步骤也会成功并生成新映像。
 
-如果您希望命令因管道中任何阶段的错误而失败，请预先set -o pipefail &&确定意外错误，以防止构建无意中成功。例如：
+如果希望命令因管道中任何阶段的错误而失败，请预先set -o pipefail &&确定意外错误，以防止构建无意中成功。例如：
 
     RUN set -o pipefail && wget -O - https://some.site | wc -l > /number
 并非所有shell都支持该-o pipefail选项。
@@ -205,7 +205,7 @@ Docker使用/bin/sh -c解释器执行这些命令，解释器仅评估管道中�
 ### CMD
 该CMD指令应用于运行图像包含的软件以及任何参数。CMD应该几乎总是以形式使用CMD ["executable", "param1", "param2"…]。因此，如果图像是用于服务的，例如Apache和Rails，那么你可以运行类似的东西CMD ["apache2","-DFOREGROUND"]。实际上，建议将这种形式的指令用于任何基于服务的图像。
 
-在大多数其他情况下，CMD应该给出一个交互式shell，例如bash，python和perl。例如，CMD ["perl", "-de0"]，CMD ["python"]，或CMD ["php", "-a"]。使用此表单意味着当您执行类似的操作时 docker run -it python，您将被放入可用的shell中，随时可以使用。 CMD应该很少的方式使用CMD ["param", "param"]会同ENTRYPOINT，除非你和你预期的用户已经非常熟悉如何ENTRYPOINT 工作的。
+在大多数其他情况下，CMD应该给出一个交互式shell，例如bash，python和perl。例如，CMD ["perl", "-de0"]，CMD ["python"]，或CMD ["php", "-a"]。使用此表单意味着当执行类似的操作时 docker run -it python，将被放入可用的shell中，随时可以使用。 CMD应该很少的方式使用CMD ["param", "param"]会同ENTRYPOINT，除非你和你预期的用户已经非常熟悉如何ENTRYPOINT 工作的。
 
 该CMD指令有三种形式：
 
@@ -215,11 +215,11 @@ Docker使用/bin/sh -c解释器执行这些命令，解释器仅评估管道中�
 
 > Dockerfile中只能有一条CMD指令。如果列出多个，CMD 则只有最后一个CMD生效。
 
-CMD的目的是为执行容器提供默认值，这些默认值可以包含可执行文件，也可以省略可执行文件，在这种情况下，您还必须指定一条ENTRYPOINT 指令。
+CMD的目的是为执行容器提供默认值，这些默认值可以包含可执行文件，也可以省略可执行文件，在这种情况下，还必须指定一条ENTRYPOINT 指令。
 
 > 注意：如果CMD用于为ENTRYPOINT 指令提供默认参数，则应使用JSON数组格式指定CMD和ENTRYPOINT指令。
 
-> 注意：exec表单被解析为JSON数组，这意味着您必须使用双引号（“）来围绕单词而不是单引号（'）。
+> 注意：exec表单被解析为JSON数组，这意味着必须使用双引号（“）来围绕单词而不是单引号（'）。
 
 > 注意：与shell表单不同，exec表单不会调用命令shell。这意味着不会发生正常的shell处理。例如， CMD [ "echo", "$HOME" ]不会对变量进行替换$HOME。如果你想要shell处理，那么要么使用shell表单，要么直接执行shell，例如：CMD [ "sh", "-c", "echo $HOME" ]。当使用exec表单并直接执行shell时（如shell表单的情况），它是执行环境变量扩展的shell，而不是docker。
 
@@ -233,7 +233,7 @@ CMD的目的是为执行容器提供默认值，这些默认值可以包含可�
 
     FROM ubuntu
     CMD ["/usr/bin/wc","--help"]
-如果您希望容器每次都运行相同的可执行文件，那么您应该考虑ENTRYPOINT结合使用CMD。请参阅 ENTRYPOINT。
+如果希望容器每次都运行相同的可执行文件，那么应该考虑ENTRYPOINT结合使用CMD。请参阅 ENTRYPOINT。
 
 如果用户指定了参数，docker run那么它们将覆盖指定的默认值CMD。
 
@@ -241,11 +241,11 @@ CMD的目的是为执行容器提供默认值，这些默认值可以包含可�
 
 ### EXPOSE
     EXPOSE <port> [<port>/<protocol>...]
-该EXPOSE指令通知Docker容器在运行时侦听指定的网络端口。您可以指定端口是侦听TCP还是UDP，如果未指定协议，则默认为TCP。
+该EXPOSE指令通知Docker容器在运行时侦听指定的网络端口。可以指定端口是侦听TCP还是UDP，如果未指定协议，则默认为TCP。
 
 该EXPOSE指令实际上不发布端口。它在构建映像的人和运行容器的人之间起到一种文档的作用，关于哪些端口要发布。要在运行容器时实际发布端口，请使用-p标志on docker run 来发布和映射一个或多个端口，或使用-P标志发布所有公开的端口并将它们映射到高阶端口。
 
-默认情况下，EXPOSE假定为TCP。您还可以指定UDP：
+默认情况下，EXPOSE假定为TCP。还可以指定UDP：
 
     EXPOSE 80/udp
 要在TCP和UDP上公开，请包含两行：
@@ -254,7 +254,7 @@ CMD的目的是为执行容器提供默认值，这些默认值可以包含可�
     EXPOSE 80/udp
 在这种情况下，如果使用-Pwith docker run，端口将为TCP暴露一次，对UDP则暴露一次。请记住，-P在主机上使用短暂的高阶主机端口，因此TCP和UDP的端口不同。
 
-无论EXPOSE设置如何，您都可以使用-p标志在运行时覆盖它们。例如
+无论EXPOSE设置如何，都可以使用-p标志在运行时覆盖它们。例如
 
     docker run -p 80:80/tcp -p 80:80/udp ...
 要在主机系统上设置端口重定向，请参阅使用-P标志。该docker network命令支持创建用于容器之间通信的网络，而无需公开或发布特定端口，因为连接到网络的容器可以通过任何端口相互通信。
@@ -281,11 +281,11 @@ CMD的目的是为执行容器提供默认值，这些默认值可以包含可�
     ENV myCat fluffy
 将在最终图像中产生相同的净结果。
 
-ENV当从生成的图像运行容器时，使用的环境变量将保持不变。您可以使用docker inspect和查看值，并使用它们进行更改docker run --env \<key>=\<value>。
+ENV当从生成的图像运行容器时，使用的环境变量将保持不变。可以使用docker inspect和查看值，并使用它们进行更改docker run --env \<key>=\<value>。
 
 要为单个命令设置值，请使用 RUN \<key>=\<value> \<command>。否则会持久化
 
-每ENV行创建一个新的中间层，就像RUN命令一样。这意味着即使您在将来的图层中取消设置环境变量，它仍然会在此图层中保留，并且可以转储其值。您可以通过创建如下所示的Dockerfile来测试它，然后构建它。
+每ENV行创建一个新的中间层，就像RUN命令一样。这意味着即使在将来的图层中取消设置环境变量，它仍然会在此图层中保留，并且可以转储其值。可以通过创建如下所示的Dockerfile来测试它，然后构建它。
 ```
 FROM alpine
 ENV ADMIN_USER="mark"
@@ -297,7 +297,7 @@ docker run --rm test sh -c 'echo $ADMIN_USER'
 
 mark
 ```
-要防止这种情况，并且确实取消设置环境变量，请使用RUN带有shell命令的命令，在单个图层中设置，使用和取消设置变量all。您可以使用;或分隔命令&&。如果您使用第二种方法，并且其中一个命令失败，则docker build也会失败。这通常是一个好主意。使用\Linux Dockerfiles作为行继续符可以提高可读性。您还可以将所有命令放入shell脚本中，并让RUN命令运行该shell脚本。
+要防止这种情况，并且确实取消设置环境变量，请使用RUN带有shell命令的命令，在单个图层中设置，使用和取消设置变量all。可以使用;或分隔命令&&。如果使用第二种方法，并且其中一个命令失败，则docker build也会失败。这通常是一个好主意。使用\Linux Dockerfiles作为行继续符可以提高可读性。还可以将所有命令放入shell脚本中，并让RUN命令运行该shell脚本。
 ```
 FROM alpine
 RUN export ADMIN_USER="mark" \
@@ -347,9 +347,9 @@ ADD test /absoluteDir/         # adds "test" to /absoluteDir/
 
 在\<src>远程文件URL 的情况下，目标将具有600的权限。如果正在检索的远程文件具有HTTP Last-Modified标头，则来自该标头的时间戳将用于设置mtime目标文件。但是，与在处理期间处理的任何其他文件一样ADD，mtime将不包括在确定文件是否已更改且应更新缓存中。
 
-> ***注意***：如果通过传递DockerfileSTDIN（docker build - < somefile）进行构建，则没有构建上下文，因此Dockerfile 只能包含基于URL的ADD指令。您还可以通过STDIN :( docker build - < archive.tar.gz）传递压缩存档Dockerfile，该存档位于存档的根目录，其余存档将用作构建的上下文。
+> ***注意***：如果通过传递DockerfileSTDIN（docker build - < somefile）进行构建，则没有构建上下文，因此Dockerfile 只能包含基于URL的ADD指令。还可以通过STDIN :( docker build - < archive.tar.gz）传递压缩存档Dockerfile，该存档位于存档的根目录，其余存档将用作构建的上下文。
 
-> ***注意***：如果您的网址文件都使用认证保护，您将需要使用RUN wget，RUN curl或使用其它工具从容器内的ADD指令不支持验证。
+> ***注意***：如果网址文件都使用认证保护，将需要使用RUN wget，RUN curl或使用其它工具从容器内的ADD指令不支持验证。
 
 >  ***注意***：ADD如果内容\<src>已更改，则第一个遇到的指令将使来自Dockerfile的所有后续指令的高速缓存无效。这包括使缓存无效以获取RUN指令。
 
@@ -406,7 +406,7 @@ COPY有两种形式：
 ### ADD和COPY对比
 一般而言，虽然ADD和COPY在功能上类似，但是**COPY**是优选的。那是因为它更透明ADD。COPY仅支持将本地文件基本复制到容器中，同时ADD具有一些功能（如仅限本地的tar提取和远程URL支持），这些功能并不是很明显。因此，ADD最好的用途是将本地tar文件自动提取到图像中，如ADD rootfs.tar.xz /。
 
-如果您有多个Dockerfile步骤使用上下文中的不同文件，则COPY它们是单独的，而不是一次性完成。这可确保每个步骤的构建缓存仅在特定所需文件更改时失效（强制重新执行该步骤）。
+如果有多个Dockerfile步骤使用上下文中的不同文件，则COPY它们是单独的，而不是一次性完成。这可确保每个步骤的构建缓存仅在特定所需文件更改时失效（强制重新执行该步骤）。
 
 例如：
 
@@ -415,7 +415,7 @@ COPY有两种形式：
     COPY . /tmp/
 导致RUN步骤的缓存失效次数少于放置 COPY . /tmp/之前的缓存失效次数。
 
-由于图像大小很重要，ADD因此强烈建议不要使用从远程URL获取包。你应该使用curl或wget代替。这样，您可以删除提取后不再需要的文件，也不必在图像中添加其他图层。例如，你应该避免做以下事情：
+由于图像大小很重要，ADD因此强烈建议不要使用从远程URL获取包。你应该使用curl或wget代替。这样，可以删除提取后不再需要的文件，也不必在图像中添加其他图层。例如，你应该避免做以下事情：
 
     ADD http://example.com/big.tar.xz /usr/src/things/
     RUN tar -xJf /usr/src/things/big.tar.xz -C /usr/src/things
@@ -426,7 +426,7 @@ COPY有两种形式：
     && curl -SL http://example.com/big.tar.xz \
     | tar -xJC /usr/src/things \
     && make -C /usr/src/things all
-对于不需要ADDtar自动提取功能的其他项目（文件，目录），您应该始终使用COPY。
+对于不需要ADDtar自动提取功能的其他项目（文件，目录），应该始终使用COPY。
 
 ### ENTRYPOINT
 ENTRYPOINT有两种形式：
@@ -434,14 +434,14 @@ ENTRYPOINT有两种形式：
 * ENTRYPOINT ["executable", "param1", "param2"] （执行形式，首选）
 * ENTRYPOINT command param1 param2 （贝壳形式）
 
-ENTRYPOINT允许您配置将作为可执行文件运行的容器。
+ENTRYPOINT允许配置将作为可执行文件运行的容器。
 
 例如，以下将使用其默认内容启动nginx，侦听端口80：
 
     docker run -i -t --rm -p 80:80 nginx
-docker run \<image>的命令行参数将附加在exec表单ENTRYPOINT中的所有元素之后，并将覆盖使用的所有指定元素CMD。这允许将参数传递给入口点，docker run \<image> -d 即将-d参数传递给入口点。您可以ENTRYPOINT使用docker run --entrypoint 标志覆盖指令。
+docker run \<image>的命令行参数将附加在exec表单ENTRYPOINT中的所有元素之后，并将覆盖使用的所有指定元素CMD。这允许将参数传递给入口点，docker run \<image> -d 即将-d参数传递给入口点。可以ENTRYPOINT使用docker run --entrypoint 标志覆盖指令。
 
-shell防止任何CMD或run被使用命令行参数，但是缺点是ENTRYPOINT将被作为一个子命令/bin/sh -c执行，其不通过信号。这意味着可执行文件不会是容器PID 1- 并且不会收到Unix信号 - 因此您的可执行文件将不会收到 SIGTERM来自docker stop \<container>。
+shell防止任何CMD或run被使用命令行参数，但是缺点是ENTRYPOINT将被作为一个子命令/bin/sh -c执行，其不通过信号。这意味着可执行文件不会是容器PID 1- 并且不会收到Unix信号 - 因此可执行文件将不会收到 SIGTERM来自docker stop \<container>。
 
 dockerfile只有最后一条ENTRYPOINT指令能被有效执行。
 
@@ -452,7 +452,7 @@ FROM ubuntu
 ENTRYPOINT ["top", "-b"]
 CMD ["-c"]
 ```
-运行容器时，您可以看到这top是唯一的进程：
+运行容器时，可以看到这top是唯一的进程：
 ```
 $ docker run -it --rm --name test  top -H
 top - 08:25:00 up  7:27,  0 users,  load average: 0.00, 0.01, 0.05
@@ -464,14 +464,14 @@ KiB Swap:  1441840 total,        0 used,  1441840 free.  1324440 cached Mem
   PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND
     1 root      20   0   19744   2336   2080 R  0.0  0.1   0:00.04 top
 ```
-要进一步检查结果，您可以使用docker exec：
+要进一步检查结果，可以使用docker exec：
 ```
 $ docker exec -it test ps aux
 USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
 root         1  2.6  0.1  19752  2352 ?        Ss+  08:24   0:00 top -b -H
 root         7  0.0  0.1  15572  2164 ?        R+   08:25   0:00 ps aux
 ```
-并且您可以优雅地请求top关闭使用docker stop test。
+并且可以优雅地请求top关闭使用docker stop test。
 
 如果直接执行docker run -it --rm --name test  top，再去查看docker exec -it test ps aux，我们会发现
 ```
@@ -487,17 +487,17 @@ Usage:
 ```
 总结：ENTRYPOINT+CMD cmd的命令会追加到ENTRYPOINT的尾部，并且执行。（无论dockerfiel中有没有CMD）docker run时，追加的命令会覆盖dockerfile的CMD，并追加到ENTRYPOINT的尾部。
 
-> ***注意***：您可以使用覆盖ENTRYPOINT设置--entrypoint，但这只能将二进制设置为exec（不会sh -c使用）。
+> ***注意***：可以使用覆盖ENTRYPOINT设置--entrypoint，但这只能将二进制设置为exec（不会sh -c使用）。
 
 > ***注意***：与shell表单不同，exec表单不会调用命令shell。这意味着不会发生正常的shell处理。例如， ENTRYPOINT [ "echo", "$HOME" ]不会对变量进行替换$HOME。如果你想要shell处理，那么要么使用shell表单，要么直接执行shell，例如：ENTRYPOINT [ "sh", "-c", "echo $HOME" ]。当使用exec表单并直接执行shell时（如shell表单的情况），它是执行环境变量扩展的shell，而不是docker。
 
 
 #### SHELL和ENTRYPOINT
-您可以为其指定一个纯字符串，ENTRYPOINT它将在其中执行/bin/sh -c。此表单将使用shell处理来替换shell环境变量，并将忽略任何CMD或docker run命令行参数。为确保docker stop能ENTRYPOINT正确发出任何长时间运行的可执行文件，您需要记住启动它exec：
+可以为其指定一个纯字符串，ENTRYPOINT它将在其中执行/bin/sh -c。此表单将使用shell处理来替换shell环境变量，并将忽略任何CMD或docker run命令行参数。为确保docker stop能ENTRYPOINT正确发出任何长时间运行的可执行文件，需要记住启动它exec：
 
     FROM ubuntu
     ENTRYPOINT exec top -b
-运行此图像时，您将看到单个PID 1进程：
+运行此图像时，将看到单个PID 1进程：
 ```
 top - 06:23:58 up 6 days, 23:53,  0 users,  load average: 0.35, 0.36, 0.30
 Tasks:   1 total,   1 running,   0 sleeping,   0 stopped,   0 zombie
@@ -545,9 +545,9 @@ CMD和ENTRYPOINT指令都定义了运行容器时要执行的命令。很少有�
 关于卷中的卷，请记住以下事项Dockerfile。
 * 从Dockerfile中更改卷：如果任何构建步骤在声明后更改卷内的数据，那么这些更改将被丢弃。
 
-* JSON格式：列表被解析为JSON数组。您必须用双引号（"）而不是单引号（'）括起单词。
+* JSON格式：列表被解析为JSON数组。必须用双引号（"）而不是单引号（'）括起单词。
 
-* 主机目录在容器运行时声明：主机目录（mountpoint）本质上是依赖于主机的。这是为了保持图像的可移植性，因为不能保证给定的主机目录在所有主机上都可用。因此，您无法从Dockerfile中安装主机目录。该VOLUME指令不支持指定host-dir 参数。您必须在创建或运行容器时指定安装点。
+* 主机目录在容器运行时声明：主机目录（mountpoint）本质上是依赖于主机的。这是为了保持图像的可移植性，因为不能保证给定的主机目录在所有主机上都可用。因此，无法从Dockerfile中安装主机目录。该VOLUME指令不支持指定host-dir 参数。必须在创建或运行容器时指定安装点。
 
 ### USER
     USER <user>[:<group>] or
@@ -566,7 +566,7 @@ USER 指令和 WORKDIR 相似，都是改变环境状态并影响以后的层。
 ### WORKDIR
 
     WORKDIR /path/to/workdir
-为了清晰和可靠，您应该始终使用绝对路径 WORKDIR。
+为了清晰和可靠，应该始终使用绝对路径 WORKDIR。
 
 该WORKDIR指令集的工作目录对任何RUN，CMD， ENTRYPOINT，COPY和ADD它后面的说明Dockerfile。如果WORKDIR不存在，即使它未在任何后续Dockerfile指令中使用，也将创建它。
 
@@ -588,7 +588,7 @@ RUN echo "hello" > world.txt
     RUN pwd
 最终pwd命令的输出Dockerfile将是 /a/b/c。
 
-该WORKDIR指令可以解析先前使用的环境变量 ENV。您只能使用显式设置的环境变量Dockerfile。例如：
+该WORKDIR指令可以解析先前使用的环境变量 ENV。只能使用显式设置的环境变量Dockerfile。例如：
 
     ENV DIRPATH /path
     WORKDIR $DIRPATH/$DIRNAME
@@ -617,7 +617,7 @@ ARG指令可以包括一个默认值：
 如果ARG指令具有默认值，并且在构建时没有传递值，则构建器将使用默认值。
 
 #### 使用ARG变量
-您可以使用ARG或ENV指令指定指令可用的变量RUN。使用该ENV指令定义的环境变量 始终覆盖ARG同名指令。考虑这个Dockerfile和一个ENV和ARG指令。
+可以使用ARG或ENV指令指定指令可用的变量RUN。使用该ENV指令定义的环境变量 始终覆盖ARG同名指令。考虑这个Dockerfile和一个ENV和ARG指令。
 
     1 FROM ubuntu
     2 ARG CONT_IMG_VER
@@ -628,7 +628,7 @@ ARG指令可以包括一个默认值：
 $ docker build --build-arg CONT_IMG_VER=v2.0.1 .
 在这种情况下，RUN指令使用v1.0.0而不是ARG用户传递的设置：v2.0.1此行为类似于shell脚本，其中本地范围的变量覆盖作为参数传递的变量或从其定义的环境继承的变量。
 
-使用上面的示例，但不同的ENV规范，您可以创建更多有用的交互ARG和ENV指令：
+使用上面的示例，但不同的ENV规范，可以创建更多有用的交互ARG和ENV指令：
 
     1 FROM ubuntu
     2 ARG CONT_IMG_VER
@@ -639,7 +639,7 @@ $ docker build --build-arg CONT_IMG_VER=v2.0.1 .
     $ docker build .
 使用此Dockerfile示例CONT_IMG_VER仍然保留在图像中，但其值将是指令v1.0.0中第3行的默认值ENV。
 
-此示例中的变量扩展技术允许您从命令行传递参数，并通过利用该ENV指令将它们保存在最终图像中 。
+此示例中的变量扩展技术允许从命令行传递参数，并通过利用该ENV指令将它们保存在最终图像中 。
 
 
 ### ONBUILD
