@@ -89,7 +89,7 @@ sle7i6budpu9diq5vt0h608fq     myvm3               Ready               Active    
 如果要重新开始，可以docker swarm leave从每个节点运行。
 
 ## 在群集群集上部署应用程序
-艰难的部分结束了。现在，只需重复上一章节03_services中使用的过程即可部署到新的swarm上。请记住，只有群体管理员可以myvm1执行Docker命令; worker只是为了能力。
+艰难的部分结束了。现在，只需重复上一章节03_services中使用的过程即可部署到新的swarm上。请记住，只有集群管理员可以myvm1执行Docker命令; worker只是为了能力。
 
 到目前为止，已经将Docker命令包装在docker-machine ssh与VM通信中。另一种选择是运行docker-machine env \<machine>以获取并运行一个命令，该命令将当前shell配置为与VM上的Docker守护程序通信。此方法适用于下一步，因为它允许使用本地docker-compose.yml文件“远程”部署应用程序，而无需将其复制到任何位置。
 
