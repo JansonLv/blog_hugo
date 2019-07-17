@@ -1,5 +1,5 @@
 baseURL = "https://blog.jansonlv.top/"
-title = "JansonLv Blog"
+title = "兮晷 Blog"
 theme = "hugo-material-docs"
 metadataformat = "yaml"
 canonifyurls = true
